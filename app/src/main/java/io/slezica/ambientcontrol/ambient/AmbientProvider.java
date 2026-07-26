@@ -11,12 +11,9 @@ public class AmbientProvider {
             return new AmbientMock(context);
         }
 
-        Ambient samsung = new AmbientSamsung(context);
-        if (samsung.isSupported()) {
-            return samsung;
-        }
-
-        return new AmbientDefault(context);
+        // Play Store version: One UI only. On other devices the app reports
+        // "Not detected" and does nothing.
+        return new AmbientSamsung(context);
     }
 
 }
