@@ -3,7 +3,6 @@ package io.slezica.ambientcontrol.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.PowerManager;
 import android.provider.Settings;
@@ -14,18 +13,12 @@ import static android.content.Context.POWER_SERVICE;
 
 public class PowerUtils {
 
-    public static void requestIgnoreBatteryOptimizations(Context context) {
-        Intent intent = new Intent();
-        String packageName = context.getPackageName();
-
-        PowerManager pm = (PowerManager) context.getSystemService(POWER_SERVICE);
-
-        if (! pm.isIgnoringBatteryOptimizations(packageName)) {
-            intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-            intent.setData(Uri.parse("package:" + packageName));
-
-            context.startActivity(intent);
-        }
+    // The direct-request dialog needs REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+    // which Play Store policy restricts. Opening the exemption list instead
+    // requires no permission; the user picks the app manually.
+    public static void openBatteryOptimizationSettings(Context context) {
+        Intent intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+        context.startActivity(intent);
     }
 
     public static boolean isIgnoringBatteryOptimizations(Context context) {
@@ -52,8 +45,9 @@ public class PowerUtils {
 
         return StatusItem.warn(
             "Battery optimization", "Restricted",
-            "The system may kill the background service, so the charger goes unnoticed.",
-            () -> requestIgnoreBatteryOptimizations(context)
+            "The system may kill the background service, so the charger goes unnoticed."
+                + " Tap Fix, find Ambient Control in the list, and choose \"Don't optimize\".",
+            () -> openBatteryOptimizationSettings(context)
         );
     }
 }
