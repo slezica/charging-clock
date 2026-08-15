@@ -65,11 +65,18 @@ public class StatusItems {
         String style = presenter.getAodStyle();
         if ("Always".equals(style)) {
             items.add(StatusItem.ok("AOD style", style));
+        } else if (presenter.canFixAodStyle()) {
+            items.add(StatusItem.warn(
+                "AOD style", style,
+                "Set Always On Display to \"Always\", so it stays visible while charging.",
+                presenter::fixAodStyle
+            ));
         } else {
+            // No settings screen found to open; point at Samsung settings instead.
             items.add(StatusItem.warn(
                 "AOD style", style,
                 "Set Always On Display to \"Always\" in Samsung settings, so it stays visible while charging.",
-                presenter.canFixAodStyle() ? presenter::fixAodStyle : null
+                null
             ));
         }
 
@@ -84,7 +91,7 @@ public class StatusItems {
         return StatusItem.warn(
             "Battery optimization", "Restricted",
             "The system may kill the background service, so the charger goes unnoticed."
-                + " Tap Fix, find Charging Clock in the list, and choose \"Don't optimize\".",
+                + " In the list, choose \"Don't optimize\" for Charging Clock.",
             presenter::openBatteryOptimizationSettings
         );
     }
