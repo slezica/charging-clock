@@ -21,6 +21,9 @@ public interface MainPresenter {
 
     String getAodStyle();
 
+    boolean canFixAodStyle();
+    void fixAodStyle();
+
     boolean isIgnoringBatteryOptimizations();
     void openBatteryOptimizationSettings();
 }

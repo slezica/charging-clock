@@ -107,6 +107,17 @@ public class MockMainPresenter implements MainPresenter {
     }
 
     @Override
+    public boolean canFixAodStyle() {
+        return true;
+    }
+
+    @Override
+    public void fixAodStyle() {
+        log.d("fixAodStyle (no-op)");
+        aodStyle = "Always";
+    }
+
+    @Override
     public boolean isIgnoringBatteryOptimizations() {
         return batteryUnrestricted;
     }

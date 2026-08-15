@@ -28,6 +28,17 @@ public class AmbientMock implements Ambient {
     }
 
     @Override
+    public boolean canOpenStyleSettings() {
+        log.d("canOpenStyleSettings called, returning true");
+        return true;
+    }
+
+    @Override
+    public void openStyleSettings() {
+        log.d("openStyleSettings called (no-op)");
+    }
+
+    @Override
     public boolean hasPermissions() {
         log.d("hasPermissions called, returning true");
         return true;

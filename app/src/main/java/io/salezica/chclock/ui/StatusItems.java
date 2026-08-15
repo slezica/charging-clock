@@ -69,7 +69,7 @@ public class StatusItems {
             items.add(StatusItem.warn(
                 "AOD style", style,
                 "Set Always On Display to \"Always\" in Samsung settings, so it stays visible while charging.",
-                null
+                presenter.canFixAodStyle() ? presenter::fixAodStyle : null
             ));
         }
 

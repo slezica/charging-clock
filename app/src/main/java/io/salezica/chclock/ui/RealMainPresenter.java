@@ -60,6 +60,16 @@ public class RealMainPresenter implements MainPresenter {
     }
 
     @Override
+    public boolean canFixAodStyle() {
+        return ambient.canOpenStyleSettings();
+    }
+
+    @Override
+    public void fixAodStyle() {
+        ambient.openStyleSettings();
+    }
+
+    @Override
     public boolean isIgnoringBatteryOptimizations() {
         return PowerUtils.isIgnoringBatteryOptimizations(context);
     }

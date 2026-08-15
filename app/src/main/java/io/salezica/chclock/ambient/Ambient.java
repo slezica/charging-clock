@@ -13,4 +13,8 @@ public interface Ambient {
     boolean isAlwaysOn();
 
     String getStyle();
+
+    boolean canOpenStyleSettings();
+
+    void openStyleSettings();
 }

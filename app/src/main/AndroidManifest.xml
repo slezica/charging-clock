@@ -10,6 +10,16 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
+    <!-- Package visibility (API 30+): without these, PackageManager can't see
+         Samsung's AOD package or resolve the lock screen settings intent, and
+         the AOD-style Fix action would silently never appear. -->
+    <queries>
+        <package android:name="com.samsung.android.app.aodservice" />
+        <intent>
+            <action android:name="android.settings.LOCK_SCREEN_SETTINGS" />
+        </intent>
+    </queries>
+
     <application
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
