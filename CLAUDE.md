@@ -26,7 +26,7 @@ bin/chclock build [--variant debug|release] [--install]
     # outputs dist/chclock-<variant>-<version>.apk (+ .aab for release)
 bin/chclock capture [state]
     # screenshots mocked UI states via adb into dist/screenshots/
-    # states: perfect unplugged no-permission wrong-style battery-restricted not-supported disabled
+    # states: perfect unplugged no-permission wrong-style battery-restricted not-supported disabled all-warnings
 bin/chclock prepare --version X.Y.Z --changes "<markdown>" [--screenshots]
     # HOST ONLY. Prompts keystore password, bumps versions, updates VERSIONS.md,
     # renders dist/icon-512.png, builds signed release, commits + tags vX.Y.Z

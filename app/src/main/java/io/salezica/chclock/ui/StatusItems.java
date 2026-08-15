@@ -37,6 +37,8 @@ public class StatusItems {
             return items;
         }
 
+        // No early return on missing permission: settings reads are ungated,
+        // so the AOD and style rows below stay accurate either way.
         if (presenter.hasPermission()) {
             items.add(StatusItem.ok("Permission", "Granted"));
         } else {
@@ -45,7 +47,6 @@ public class StatusItems {
                 "Charging Clock needs \"Modify system settings\" to control AOD.",
                 presenter::requestPermission
             ));
-            return items;
         }
 
         boolean alwaysOn = presenter.isAlwaysOn();

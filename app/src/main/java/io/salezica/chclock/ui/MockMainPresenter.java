@@ -11,7 +11,7 @@ public class MockMainPresenter implements MainPresenter {
 
     public static final String[] PRESETS = {
         "perfect", "unplugged", "no-permission", "wrong-style",
-        "battery-restricted", "not-supported", "disabled",
+        "battery-restricted", "not-supported", "disabled", "all-warnings",
     };
 
     private final TaggedLog log = new TaggedLog(this);
@@ -49,6 +49,13 @@ public class MockMainPresenter implements MainPresenter {
             case "disabled":
                 p.enabled = false;
                 p.alwaysOn = false;
+                break;
+            case "all-warnings":
+                // Every warning at once, except not-supported (hides the rest):
+                p.permission = false;
+                p.alwaysOn = false;          // mismatch: plugged + enabled but AOD off
+                p.aodStyle = "Tap to show";
+                p.batteryUnrestricted = false;
                 break;
             default:
                 p.log.d("Unknown preset '" + preset + "', using perfect");

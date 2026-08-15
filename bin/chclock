@@ -27,7 +27,7 @@ MAIN_ACTIVITY = APP_ID + ".MainActivity"
 # Must match MockMainPresenter.PRESETS:
 STATES = [
     "perfect", "unplugged", "no-permission", "wrong-style",
-    "battery-restricted", "not-supported", "disabled",
+    "battery-restricted", "not-supported", "disabled", "all-warnings",
 ]
 
 
