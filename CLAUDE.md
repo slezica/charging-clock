@@ -27,6 +27,8 @@ bin/chclock build [--variant debug|release] [--install]
 bin/chclock capture [state]
     # screenshots mocked UI states via adb into dist/screenshots/
     # states: perfect unplugged no-permission wrong-style battery-restricted not-supported disabled all-warnings
+bin/chclock probe
+    # read-only adb inspection: AOD settings entry points on connected device
 bin/chclock prepare --version X.Y.Z --changes "<markdown>" [--screenshots]
     # HOST ONLY. Prompts keystore password, bumps versions, updates VERSIONS.md,
     # renders dist/icon-512.png, builds signed release, commits + tags vX.Y.Z
@@ -34,6 +36,11 @@ bin/chclock help
 ```
 
 Raw gradle still works (`./gradlew assembleDebug|test|connectedAndroidTest`); tests are stubs only.
+
+## Commits
+
+- Commit progressively while working: small commits that tell the implementation story, not one lump at the end.
+- Message style: single line, imperative, first letter uppercase, no trailing period (see git log).
 
 ## Release rules
 
@@ -93,6 +100,7 @@ docs/                               # guides + dated decision records
 - Samsung AOD is `Settings.System` key `aod_mode`, not AOSP's `doze_always_on` secure setting.
 - Samsung rejects third-party writes to AOD *style* keys (`aod_tap_to_show_mode` etc.) even with elevated permissions. User must set style to "Always" manually; app only detects and warns (`AmbientSamsung.getStyle()` heuristic).
 - `WRITE_SETTINGS` is an appop, not a runtime permission: check `Settings.System.canWrite()`, grant via `ACTION_MANAGE_WRITE_SETTINGS` screen.
+- AOD style Fix action: no stable public intent for Samsung AOD settings. `AmbientSamsung.openStyleSettings()` tries a candidate chain (aodservice exported `*Setting*` activities resolved at runtime, then hidden action `android.settings.LOCK_SCREEN_SETTINGS`); if nothing resolves, the Fix button is hidden. Needs the `<queries>` manifest block for package visibility.
 - No `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` — Play policy risk. Fix button opens the system exemption list instead (`PowerUtils.openBatteryOptimizationSettings`).
 - FGS type is `specialUse`; manifest carries `PROPERTY_SPECIAL_USE_FGS_SUBTYPE` justification.
 - Settings write failures in the service are swallowed deliberately — a crash would loop the sticky service.
