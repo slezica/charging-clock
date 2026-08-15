@@ -1,12 +1,16 @@
 package io.salezica.chclock;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -100,10 +104,9 @@ public class MainActivity extends AppCompatActivity {
             TextView label = row.findViewById(R.id.status_label);
             TextView value = row.findViewById(R.id.status_value);
             TextView hint = row.findViewById(R.id.status_hint);
-            Button fix = row.findViewById(R.id.status_fix);
 
             label.setText(item.label);
-            value.setText(item.value);
+            value.setText(buildValueText(item));
             value.setTextColor(getColor(getToneColor(item.tone)));
 
             if (item.hint != null) {
@@ -113,16 +116,31 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (item.fix != null) {
-                fix.setOnClickListener(v -> {
+                row.setOnClickListener(v -> {
                     item.fix.run();
                     renderStatus();
                 });
-            } else {
-                fix.setVisibility(View.GONE);
             }
 
             statusContainer.addView(row);
         }
+    }
+
+    /** Bold value; actionable rows get a smaller, non-bold "· Tap to fix" suffix. */
+    private CharSequence buildValueText(StatusItem item) {
+        SpannableStringBuilder text = new SpannableStringBuilder(item.value);
+        text.setSpan(new StyleSpan(Typeface.BOLD), 0, text.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        if (item.fix != null) {
+            String suffix = " · " + getString(R.string.tap_to_fix);
+            int start = text.length();
+            text.append(suffix);
+            text.setSpan(new RelativeSizeSpan(0.72f), start, text.length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        return text;
     }
 
     private int getToneColor(StatusItem.Tone tone) {
