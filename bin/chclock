@@ -201,6 +201,18 @@ def cmd_capture(args):
     def shell(*cmd):
         return run([adb, "shell"] + list(cmd), env=env, capture=True)
 
+    def wait_for_activity(timeout_seconds=15):
+        """Poll until MainActivity is the top resumed activity (cold starts can
+        exceed any fixed sleep), then leave a beat for the final render."""
+        for _ in range(timeout_seconds * 2):
+            out = shell("dumpsys", "activity", "activities").stdout
+            resumed = [line for line in out.splitlines() if "topResumedActivity" in line]
+            if any(DEBUG_APP_ID in line for line in resumed):
+                shell("sleep", "0.5")
+                return
+            shell("sleep", "0.5")
+        die("MainActivity did not reach the foreground (crash? check logcat)")
+
     shell("input", "keyevent", "KEYCODE_WAKEUP")
     shell("wm", "dismiss-keyguard")
 
@@ -211,7 +223,7 @@ def cmd_capture(args):
             "am", "start", "-n", f"{DEBUG_APP_ID}/{MAIN_ACTIVITY}",
             "--es", "preset", state,
         )
-        run([adb, "shell", "sleep", "2"], env=env, capture=True)
+        wait_for_activity()
 
         png = shots_dir / f"{state}.png"
         with open(png, "wb") as out:
