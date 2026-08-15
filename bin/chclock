@@ -23,6 +23,7 @@ ICON_SVG = ROOT / "art" / "icon.svg"
 APP_ID = "io.salezica.chclock"
 DEBUG_APP_ID = APP_ID + ".debug"
 MAIN_ACTIVITY = APP_ID + ".MainActivity"
+AOD_PACKAGE = "com.samsung.android.app.aodservice"
 
 # Must match MockMainPresenter.PRESETS:
 STATES = [
@@ -220,6 +221,36 @@ def cmd_capture(args):
     print("Capture OK.")
 
 
+# ------------------------------------------------------------ cmd: probe
+
+def cmd_probe(args):
+    """Read-only device inspection: AOD settings entry points for the Fix action."""
+    adb, env = connect_adb()
+
+    def shell(*cmd):
+        return run([adb, "shell"] + list(cmd), env=env, capture=True).stdout
+
+    print(f"== {AOD_PACKAGE} installed? ==")
+    installed = shell("pm", "list", "packages", AOD_PACKAGE).strip()
+    print(f"  {installed or '(not installed — not a One UI device?)'}")
+
+    print(f"\n== {AOD_PACKAGE} components in resolver tables ==")
+    print("  (intent-filtered only; app enumerates ALL activities at runtime)")
+    dump = shell("dumpsys", "package", AOD_PACKAGE)
+    components = sorted(set(re.findall(re.escape(AOD_PACKAGE) + r"/\S+", dump)))
+    for component in components:
+        print(f"  {component}")
+    if not components:
+        print("  (none)")
+
+    print("\n== android.settings.LOCK_SCREEN_SETTINGS resolves to ==")
+    resolved = shell(
+        "cmd", "package", "resolve-activity", "--brief",
+        "-a", "android.settings.LOCK_SCREEN_SETTINGS",
+    ).strip()
+    print(f"  {resolved or '(nothing)'}")
+
+
 # ---------------------------------------------------------- cmd: prepare
 
 def preflight(args):
@@ -359,6 +390,8 @@ def main():
     p_capture = sub.add_parser("capture", help="Screenshot mocked UI states via adb")
     p_capture.add_argument("state", nargs="?", help=f"one of: {', '.join(STATES)} (default: all)")
 
+    sub.add_parser("probe", help="Inspect connected device for AOD settings entry points")
+
     p_prepare = sub.add_parser("prepare", help="Prepare a release (host only: prompts for keystore password)")
     p_prepare.add_argument("--version", required=True, help="X.Y.Z")
     p_prepare.add_argument("--changes", required=True, help="markdown changelog entry (multiline OK)")
@@ -372,7 +405,7 @@ def main():
         parser.print_help()
         return
 
-    {"build": cmd_build, "capture": cmd_capture, "prepare": cmd_prepare}[args.command](args)
+    {"build": cmd_build, "capture": cmd_capture, "probe": cmd_probe, "prepare": cmd_prepare}[args.command](args)
 
 
 if __name__ == "__main__":
