@@ -30,7 +30,7 @@
         <service
                 android:name=".services.AmbientTileService"
                 android:icon="@drawable/ic_phonelink_setup_black_24dp"
-                android:label="Ambient"
+                android:label="Charging Clock"
                 android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
                 android:exported="true">
 

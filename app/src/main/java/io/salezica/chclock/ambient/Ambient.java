@@ -1,10 +1,6 @@
-package io.slezica.ambientcontrol.ambient;
-
-import java.util.List;
+package io.salezica.chclock.ambient;
 
 public interface Ambient {
-
-    List<StatusItem> getStatus();
 
     boolean hasPermissions();
 
@@ -15,4 +11,6 @@ public interface Ambient {
     void setAlwaysOn(boolean alwaysOn);
 
     boolean isAlwaysOn();
+
+    String getStyle();
 }

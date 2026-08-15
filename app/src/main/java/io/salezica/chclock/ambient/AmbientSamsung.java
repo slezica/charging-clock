@@ -1,4 +1,4 @@
-package io.slezica.ambientcontrol.ambient;
+package io.salezica.chclock.ambient;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,12 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import io.slezica.ambientcontrol.utils.PowerUtils;
-import io.slezica.ambientcontrol.utils.Prefs;
-import io.slezica.ambientcontrol.utils.TaggedLog;
+import io.salezica.chclock.utils.TaggedLog;
 
 public class AmbientSamsung implements Ambient {
 
@@ -32,57 +27,7 @@ public class AmbientSamsung implements Ambient {
     }
 
     @Override
-    public List<StatusItem> getStatus() {
-        List<StatusItem> items = new ArrayList<>();
-
-        if (!isSupported()) {
-            items.add(StatusItem.warn(
-                "Always On Display", "Not detected",
-                "This device does not expose Samsung AOD settings.",
-                null
-            ));
-            return items;
-        }
-
-        if (hasPermissions()) {
-            items.add(StatusItem.ok("Permission", "Granted"));
-        } else {
-            items.add(StatusItem.warn(
-                "Permission", "Missing",
-                "Ambient Control needs \"Modify system settings\" to control AOD.",
-                this::requestPermissions
-            ));
-            return items;
-        }
-
-        boolean alwaysOn = isAlwaysOn();
-        boolean expected = PowerUtils.isPlugged(context) && Prefs.isEnabled(context);
-
-        if (alwaysOn == expected) {
-            items.add(StatusItem.ok("Always On Display", alwaysOn ? "On" : "Off"));
-        } else {
-            items.add(StatusItem.warn(
-                "Always On Display", alwaysOn ? "On" : "Off",
-                "Doesn't match the charger state. The background service may not be running.",
-                null
-            ));
-        }
-
-        String style = getStyle();
-        if ("Always".equals(style)) {
-            items.add(StatusItem.ok("AOD style", style));
-        } else {
-            items.add(StatusItem.warn(
-                "AOD style", style,
-                "Set Always On Display to \"Always\" in Samsung settings, so it stays visible while charging.",
-                null
-            ));
-        }
-
-        return items;
-    }
-
-    private String getStyle() {
+    public String getStyle() {
         if (getSetting(AOD_TAP_TO_SHOW) != 0) return "Tap to show";
         if (getSetting("aod_display_mode_auto") != 0) return "Auto";
         if (getSetting("aod_show_for_new_noti") != 0) return "New notifications";

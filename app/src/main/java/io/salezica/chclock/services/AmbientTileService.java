@@ -1,10 +1,10 @@
-package io.slezica.ambientcontrol.services;
+package io.salezica.chclock.services;
 
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
-import io.slezica.ambientcontrol.ambient.Ambient;
-import io.slezica.ambientcontrol.ambient.AmbientProvider;
-import io.slezica.ambientcontrol.utils.PowerUtils;
+import io.salezica.chclock.ambient.Ambient;
+import io.salezica.chclock.ambient.AmbientProvider;
+import io.salezica.chclock.utils.PowerUtils;
 
 public class AmbientTileService extends TileService {
 

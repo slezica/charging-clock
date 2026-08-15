@@ -1,38 +1,43 @@
 apply plugin: 'com.android.application'
 
-// Signing credentials live outside version control. See docs/PUBLISHING.md.
-def keystoreProps = new Properties()
-def keystoreFile = rootProject.file('keystore.properties')
-if (keystoreFile.exists()) {
-    keystoreFile.withInputStream { keystoreProps.load(it) }
-}
+// Release signing: keystore at secrets/release.keystore (untracked), password
+// via the KEYSTORE_PASSWORD env var, provided interactively by bin/chclock
+// prepare. Never stored on disk. See docs/PUBLISHING.md.
+def keystorePassword = System.getenv('KEYSTORE_PASSWORD')
 
 android {
-    namespace "io.slezica.ambientcontrol"
+    namespace "io.salezica.chclock"
     compileSdkVersion 35
     defaultConfig {
-        applicationId "io.slezica.ambientcontrol"
+        applicationId "io.salezica.chclock"
         minSdkVersion 24
         targetSdkVersion 35
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
+    buildFeatures {
+        buildConfig true
+    }
     signingConfigs {
         release {
-            if (keystoreFile.exists()) {
-                storeFile rootProject.file(keystoreProps['storeFile'])
-                storePassword keystoreProps['storePassword']
-                keyAlias keystoreProps['keyAlias']
-                keyPassword keystoreProps['keyPassword']
+            if (keystorePassword != null) {
+                storeFile rootProject.file('secrets/release.keystore')
+                storePassword keystorePassword
+                keyAlias 'chclock'
+                keyPassword keystorePassword
             }
         }
     }
     buildTypes {
+        debug {
+            // Never collides with the store install on a personal device:
+            applicationIdSuffix '.debug'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            if (keystoreFile.exists()) {
+            if (keystorePassword != null) {
                 signingConfig signingConfigs.release
             }
         }

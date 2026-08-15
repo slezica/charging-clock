@@ -1,12 +1,9 @@
-package io.slezica.ambientcontrol.ambient;
+package io.salezica.chclock.ambient;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.util.Arrays;
-import java.util.List;
-
-import io.slezica.ambientcontrol.utils.TaggedLog;
+import io.salezica.chclock.utils.TaggedLog;
 
 public class AmbientMock implements Ambient {
 
@@ -25,14 +22,9 @@ public class AmbientMock implements Ambient {
     }
 
     @Override
-    public List<StatusItem> getStatus() {
-        log.d("getStatus called");
-
-        return Arrays.asList(
-            StatusItem.ok("Permission", "Granted"),
-            StatusItem.neutral("Ambient display", isAlwaysOn() ? "On" : "Off"),
-            StatusItem.warn("Mock", "Active", "This is the mock backend; no settings are touched.", null)
-        );
+    public String getStyle() {
+        log.d("getStyle called, returning Always");
+        return "Always";
     }
 
     @Override

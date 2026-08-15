@@ -1,4 +1,4 @@
-package io.slezica.ambientcontrol.utils;
+package io.salezica.chclock.utils;
 
 import android.util.Log;
 

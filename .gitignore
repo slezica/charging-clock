@@ -2,7 +2,8 @@
 *.iml
 .gradle
 /local.properties
-/keystore.properties
+/secrets/
+/dist/
 *.keystore
 *.jks
 /.idea/caches/build_file_checksums.ser

@@ -82,37 +82,35 @@ nothing.
 ## Care item 5: signing and release builds
 
 1. Create a keystore (once, back it up — losing it with Play App Signing is
-   recoverable, without it is not):
+   recoverable, without it is not). Path and alias are fixed conventions read
+   by `app/build.gradle` and `bin/chclock`:
 
    ```
-   $ keytool -genkeypair -v -keystore ambient-control.jks \
-       -keyalg RSA -keysize 2048 -validity 10000 -alias ambient-control
+   $ keytool -genkeypair -v -keystore secrets/release.keystore \
+       -keyalg RSA -keysize 2048 -validity 10000 -alias chclock
    ```
 
-2. Create `keystore.properties` in the repo root (gitignored, never commit):
+   `secrets/` is gitignored. The password is never stored on disk:
+   `bin/chclock prepare` prompts for it and passes it to Gradle via the
+   `KEYSTORE_PASSWORD` environment variable (host memory only).
+
+2. Prepare the release (host only — interactive password prompt):
 
    ```
-   storeFile=ambient-control.jks
-   storePassword=...
-   keyAlias=ambient-control
-   keyPassword=...
+   $ bin/chclock prepare --version X.Y.Z --changes "..." [--screenshots]
    ```
 
-3. Play requires an App Bundle, not an APK:
+   Bumps versions, updates `docs/VERSIONS.md`, renders the 512px listing icon,
+   builds signed APK + AAB into `dist/`, commits and tags `vX.Y.Z`.
+   Play requires the App Bundle: upload `dist/chclock-release-X.Y.Z.aab`.
 
-   ```
-   $ ./gradlew bundleRelease
-   ```
-
-   Output: `app/build/outputs/bundle/release/app-release.aab`.
-
-4. Enroll in Play App Signing on first upload (mandatory for new apps). The
+3. Enroll in Play App Signing on first upload (mandatory for new apps). The
    local keystore becomes the *upload* key.
 
 ## Care item 6: per-release chores
 
-- Bump `versionCode` (and `versionName`) in `app/build.gradle` for every
-  upload; Play rejects duplicate `versionCode`.
+- `bin/chclock prepare` bumps `versionName`/`versionCode` (scheme
+  `X*10000 + Y*100 + Z`); Play rejects duplicate `versionCode`.
 - Keep `targetSdkVersion` within Play's yearly deadline (currently 35, fine).
 - Each release with an FGS goes through the declaration review again; keep the
   `specialUse` justification stable between releases.

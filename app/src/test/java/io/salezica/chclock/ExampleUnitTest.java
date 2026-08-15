@@ -1,4 +1,4 @@
-package io.slezica.ambientcontrol;
+package io.salezica.chclock;
 
 import org.junit.Test;
 

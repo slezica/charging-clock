@@ -1,4 +1,4 @@
-# AmbientControl
+# Charging Clock
 
 An Android application that automatically activates the Always-On Display while your phone is charging.
 

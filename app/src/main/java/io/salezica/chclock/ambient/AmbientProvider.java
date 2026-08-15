@@ -1,4 +1,4 @@
-package io.slezica.ambientcontrol.ambient;
+package io.salezica.chclock.ambient;
 
 import android.content.Context;
 

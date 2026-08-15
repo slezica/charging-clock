@@ -1,4 +1,4 @@
-package io.slezica.ambientcontrol.inspection;
+package io.salezica.chclock.inspection;
 
 import android.content.ContentResolver;
 import android.os.Handler;

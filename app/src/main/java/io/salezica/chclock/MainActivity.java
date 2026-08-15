@@ -1,4 +1,4 @@
-package io.slezica.ambientcontrol;
+package io.salezica.chclock;
 
 import android.content.Intent;
 import android.os.Build;
@@ -13,20 +13,21 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import io.slezica.ambientcontrol.ambient.Ambient;
-import io.slezica.ambientcontrol.ambient.AmbientProvider;
-import io.slezica.ambientcontrol.ambient.StatusItem;
-import io.slezica.ambientcontrol.inspection.SettingsReader;
-import io.slezica.ambientcontrol.services.AmbientControlService;
-import io.slezica.ambientcontrol.utils.PowerUtils;
-import io.slezica.ambientcontrol.utils.Prefs;
+import io.salezica.chclock.ambient.StatusItem;
+import io.salezica.chclock.inspection.SettingsReader;
+import io.salezica.chclock.services.AmbientControlService;
+import io.salezica.chclock.ui.MainPresenter;
+import io.salezica.chclock.ui.MockMainPresenter;
+import io.salezica.chclock.ui.RealMainPresenter;
+import io.salezica.chclock.ui.StatusItems;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Ambient ambient;
+    public static final String EXTRA_PRESET = "preset";
+
+    private MainPresenter presenter;
     private LinearLayout statusContainer;
 
     @Override
@@ -34,21 +35,35 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ambient = AmbientProvider.getFor(this);
+        presenter = createPresenter();
         statusContainer = (LinearLayout) findViewById(R.id.status_container);
 
         SwitchCompat enabledSwitch = findViewById(R.id.enabled_switch);
-        enabledSwitch.setChecked(Prefs.isEnabled(this));
+        enabledSwitch.setChecked(presenter.isEnabled());
         enabledSwitch.setOnCheckedChangeListener((view, isChecked) -> {
-            Prefs.setEnabled(this, isChecked);
-            AmbientControlService.applyPowerState(this, PowerUtils.isPlugged(this));
+            presenter.setEnabled(isChecked);
             renderStatus();
         });
 
-        startControlService();
+        if (!isMocked()) {
+            startControlService();
+        }
 
         // Only for development, as Android changes how settings are managed:
         // startWatchingSettingChanges();
+    }
+
+    private MainPresenter createPresenter() {
+        if (isMocked()) {
+            return MockMainPresenter.fromPreset(getIntent().getStringExtra(EXTRA_PRESET));
+        }
+
+        return new RealMainPresenter(this);
+    }
+
+    // Debug-only escape hatch for screenshots and UI work; see bin/chclock capture.
+    private boolean isMocked() {
+        return BuildConfig.DEBUG && getIntent().hasExtra(EXTRA_PRESET);
     }
 
     private void startWatchingSettingChanges() {
@@ -73,11 +88,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void renderStatus() {
-        List<StatusItem> items = new ArrayList<>();
-
-        items.add(PowerUtils.getChargerStatus(this));
-        items.addAll(ambient.getStatus());
-        items.add(PowerUtils.getBatteryOptimizationStatus(this));
+        List<StatusItem> items = StatusItems.build(presenter);
 
         statusContainer.removeAllViews();
 

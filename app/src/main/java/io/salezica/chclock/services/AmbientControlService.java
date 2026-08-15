@@ -1,4 +1,4 @@
-package io.slezica.ambientcontrol.services;
+package io.salezica.chclock.services;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -16,19 +16,19 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import io.slezica.ambientcontrol.MainActivity;
-import io.slezica.ambientcontrol.R;
-import io.slezica.ambientcontrol.ambient.Ambient;
-import io.slezica.ambientcontrol.ambient.AmbientProvider;
-import io.slezica.ambientcontrol.utils.PowerUtils;
-import io.slezica.ambientcontrol.utils.Prefs;
-import io.slezica.ambientcontrol.utils.TaggedLog;
+import io.salezica.chclock.MainActivity;
+import io.salezica.chclock.R;
+import io.salezica.chclock.ambient.Ambient;
+import io.salezica.chclock.ambient.AmbientProvider;
+import io.salezica.chclock.utils.PowerUtils;
+import io.salezica.chclock.utils.Prefs;
+import io.salezica.chclock.utils.TaggedLog;
 
 public class AmbientControlService extends Service {
 
     private static String NOTIFICATION_CHANNEL_ID = "Service";
-    private static String NOTIFICATION_CHANNEL_NAME = "Ambient Control";
-    private static String NOTIFICATION_TITLE = "Ambient Control";
+    private static String NOTIFICATION_CHANNEL_NAME = "Charging Clock";
+    private static String NOTIFICATION_TITLE = "Charging Clock";
 
     private static final TaggedLog log = new TaggedLog(AmbientControlService.class);
 
