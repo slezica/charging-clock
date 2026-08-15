@@ -168,10 +168,15 @@ def cmd_build(args):
     if args.install:
         adb, env = connect_adb()
         apk = next(a for a in artifacts if a.suffix == ".apk")
+        app_id = DEBUG_APP_ID if variant == "debug" else APP_ID
         print(f"Installing {apk.name} ...")
-        result = run([adb, "install", "-r", str(apk)], env=env)
+        result = run([adb, "install", "-r", str(apk)], env=env, capture=True)
+        if result.returncode != 0 and "INSTALL_FAILED_UPDATE_INCOMPATIBLE" in result.stdout + result.stderr:
+            print("Signature mismatch with installed app; uninstalling and retrying ...")
+            run([adb, "uninstall", app_id], env=env, capture=True)
+            result = run([adb, "install", str(apk)], env=env, capture=True)
         if result.returncode != 0:
-            die("adb install failed")
+            die(f"adb install failed:\n{(result.stdout + result.stderr).strip()}")
         print("Installed.")
 
     return artifacts
