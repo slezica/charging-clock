@@ -22,9 +22,9 @@ public class AmbientMock implements Ambient {
     }
 
     @Override
-    public String getStyle() {
-        log.d("getStyle called, returning Always");
-        return "Always";
+    public AodStyle getStyle() {
+        log.d("getStyle called, returning ALWAYS");
+        return AodStyle.ALWAYS;
     }
 
     @Override

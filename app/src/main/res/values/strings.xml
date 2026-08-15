@@ -3,8 +3,44 @@
 
     <string name="tagline">Always On Display follows your charger</string>
 
-    <string name="tap_to_fix">Tap to fix</string>
-
     <string name="enabled">Enabled</string>
 
+    <string name="tap_to_fix">Tap to fix</string>
+
+    <!-- Dashboard rows -->
+    <string name="label_charger">Charger</string>
+    <string name="value_connected">Connected</string>
+    <string name="value_disconnected">Disconnected</string>
+
+    <string name="label_permission">Permission</string>
+    <string name="value_granted">Granted</string>
+    <string name="value_missing">Missing</string>
+    <string name="hint_permission">Charging Clock needs \"Modify system settings\" to control AOD.</string>
+
+    <string name="label_aod">Always On Display</string>
+    <string name="value_on">On</string>
+    <string name="value_off">Off</string>
+    <string name="value_not_detected">Not detected</string>
+    <string name="hint_not_supported">This device does not expose Samsung AOD settings.</string>
+    <string name="hint_aod_mismatch">Doesn\'t match the charger state. The background service may not be running.</string>
+
+    <string name="label_aod_style">AOD style</string>
+    <string name="hint_style_fixable">Set Always On Display to \"Always\", so it stays visible while charging.</string>
+    <string name="hint_style_manual">Set Always On Display to \"Always\" in Samsung settings, so it stays visible while charging.</string>
+
+    <string name="style_always">Always</string>
+    <string name="style_tap_to_show">Tap to show</string>
+    <string name="style_auto">Auto</string>
+    <string name="style_new_notifications">New notifications</string>
+    <string name="style_scheduled">Scheduled</string>
+
+    <string name="label_battery">Battery optimization</string>
+    <string name="value_unrestricted">Unrestricted</string>
+    <string name="value_restricted">Restricted</string>
+    <string name="hint_battery">The system may kill the background service, so the charger goes unnoticed. In the list, choose \"Don\'t optimize\" for Charging Clock.</string>
+
+    <!-- Foreground service notification -->
+    <string name="notification_title">Charging Clock</string>
+    <string name="notification_channel_name">Charging Clock</string>
+    <string name="notification_channel_description">Sticky notification to keep service running</string>
 </resources>

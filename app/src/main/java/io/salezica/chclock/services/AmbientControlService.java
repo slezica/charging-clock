@@ -26,9 +26,7 @@ import io.salezica.chclock.utils.TaggedLog;
 
 public class AmbientControlService extends Service {
 
-    private static String NOTIFICATION_CHANNEL_ID = "Service";
-    private static String NOTIFICATION_CHANNEL_NAME = "Charging Clock";
-    private static String NOTIFICATION_TITLE = "Charging Clock";
+    private static final String NOTIFICATION_CHANNEL_ID = "Service";
 
     private static final TaggedLog log = new TaggedLog(AmbientControlService.class);
 
@@ -69,7 +67,7 @@ public class AmbientControlService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private Notification createNotification() {
         Notification.Builder builder = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setContentTitle(NOTIFICATION_TITLE)
+            .setContentTitle(getString(R.string.notification_title))
             .setSmallIcon(R.drawable.ic_launcher_background)
             .setOngoing(true);
 
@@ -84,11 +82,11 @@ public class AmbientControlService extends Service {
     private void createNotificationChannel() {
         NotificationChannel ch = new NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
-            NOTIFICATION_CHANNEL_NAME,
+            getString(R.string.notification_channel_name),
             NotificationManager.IMPORTANCE_MIN
         );
 
-        ch.setDescription("Sticky notification to keep service running");
+        ch.setDescription(getString(R.string.notification_channel_description));
 
         NotificationManager manager = getSystemService(NotificationManager.class);
         manager.createNotificationChannel(ch);

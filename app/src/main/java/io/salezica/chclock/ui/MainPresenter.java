@@ -1,5 +1,7 @@
 package io.salezica.chclock.ui;
 
+import io.salezica.chclock.ambient.AodStyle;
+
 /**
  * Everything MainActivity needs to render and act, as typed properties and
  * actions. RealMainPresenter backs it with the actual system; MockMainPresenter
@@ -19,7 +21,7 @@ public interface MainPresenter {
 
     boolean isAlwaysOn();
 
-    String getAodStyle();
+    AodStyle getAodStyle();
 
     boolean canFixAodStyle();
     void fixAodStyle();

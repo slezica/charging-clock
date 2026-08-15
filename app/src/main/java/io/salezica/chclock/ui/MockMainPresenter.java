@@ -1,5 +1,6 @@
 package io.salezica.chclock.ui;
 
+import io.salezica.chclock.ambient.AodStyle;
 import io.salezica.chclock.utils.TaggedLog;
 
 /**
@@ -21,7 +22,7 @@ public class MockMainPresenter implements MainPresenter {
     private boolean supported = true;
     private boolean permission = true;
     private boolean alwaysOn = true;
-    private String aodStyle = "Always";
+    private AodStyle aodStyle = AodStyle.ALWAYS;
     private boolean batteryUnrestricted = true;
 
     public static MockMainPresenter fromPreset(String preset) {
@@ -38,7 +39,7 @@ public class MockMainPresenter implements MainPresenter {
                 p.permission = false;
                 break;
             case "wrong-style":
-                p.aodStyle = "Tap to show";
+                p.aodStyle = AodStyle.TAP_TO_SHOW;
                 break;
             case "battery-restricted":
                 p.batteryUnrestricted = false;
@@ -54,7 +55,7 @@ public class MockMainPresenter implements MainPresenter {
                 // Every warning at once, except not-supported (hides the rest):
                 p.permission = false;
                 p.alwaysOn = false;          // mismatch: plugged + enabled but AOD off
-                p.aodStyle = "Tap to show";
+                p.aodStyle = AodStyle.TAP_TO_SHOW;
                 p.batteryUnrestricted = false;
                 break;
             default:
@@ -102,7 +103,7 @@ public class MockMainPresenter implements MainPresenter {
     }
 
     @Override
-    public String getAodStyle() {
+    public AodStyle getAodStyle() {
         return aodStyle;
     }
 
@@ -114,7 +115,7 @@ public class MockMainPresenter implements MainPresenter {
     @Override
     public void fixAodStyle() {
         log.d("fixAodStyle (no-op)");
-        aodStyle = "Always";
+        aodStyle = AodStyle.ALWAYS;
     }
 
     @Override

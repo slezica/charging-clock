@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void renderStatus() {
-        List<StatusItem> items = StatusItems.build(presenter);
+        List<StatusItem> items = new StatusItems(this, presenter).build();
 
         statusContainer.removeAllViews();
 

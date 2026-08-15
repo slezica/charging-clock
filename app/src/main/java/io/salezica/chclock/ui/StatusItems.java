@@ -1,8 +1,12 @@
 package io.salezica.chclock.ui;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import io.salezica.chclock.R;
+import io.salezica.chclock.ambient.AodStyle;
 import io.salezica.chclock.ambient.StatusItem;
 
 /**
@@ -11,27 +15,36 @@ import io.salezica.chclock.ambient.StatusItem;
  */
 public class StatusItems {
 
-    public static List<StatusItem> build(MainPresenter presenter) {
+    private final Context context;
+    private final MainPresenter presenter;
+
+    public StatusItems(Context context, MainPresenter presenter) {
+        this.context = context;
+        this.presenter = presenter;
+    }
+
+    public List<StatusItem> build() {
         List<StatusItem> items = new ArrayList<>();
 
         items.add(StatusItem.neutral(
-            "Charger", presenter.isPlugged() ? "Connected" : "Disconnected"
+            str(R.string.label_charger),
+            str(presenter.isPlugged() ? R.string.value_connected : R.string.value_disconnected)
         ));
 
-        items.addAll(buildAmbientItems(presenter));
+        items.addAll(buildAmbientItems());
 
-        items.add(buildBatteryOptimizationItem(presenter));
+        items.add(buildBatteryOptimizationItem());
 
         return items;
     }
 
-    private static List<StatusItem> buildAmbientItems(MainPresenter presenter) {
+    private List<StatusItem> buildAmbientItems() {
         List<StatusItem> items = new ArrayList<>();
 
         if (!presenter.isSupported()) {
             items.add(StatusItem.warn(
-                "Always On Display", "Not detected",
-                "This device does not expose Samsung AOD settings.",
+                str(R.string.label_aod), str(R.string.value_not_detected),
+                str(R.string.hint_not_supported),
                 null
             ));
             return items;
@@ -40,42 +53,43 @@ public class StatusItems {
         // No early return on missing permission: settings reads are ungated,
         // so the AOD and style rows below stay accurate either way.
         if (presenter.hasPermission()) {
-            items.add(StatusItem.ok("Permission", "Granted"));
+            items.add(StatusItem.ok(str(R.string.label_permission), str(R.string.value_granted)));
         } else {
             items.add(StatusItem.warn(
-                "Permission", "Missing",
-                "Charging Clock needs \"Modify system settings\" to control AOD.",
+                str(R.string.label_permission), str(R.string.value_missing),
+                str(R.string.hint_permission),
                 presenter::requestPermission
             ));
         }
 
         boolean alwaysOn = presenter.isAlwaysOn();
         boolean expected = presenter.isPlugged() && presenter.isEnabled();
+        String aodValue = str(alwaysOn ? R.string.value_on : R.string.value_off);
 
         if (alwaysOn == expected) {
-            items.add(StatusItem.ok("Always On Display", alwaysOn ? "On" : "Off"));
+            items.add(StatusItem.ok(str(R.string.label_aod), aodValue));
         } else {
             items.add(StatusItem.warn(
-                "Always On Display", alwaysOn ? "On" : "Off",
-                "Doesn't match the charger state. The background service may not be running.",
+                str(R.string.label_aod), aodValue,
+                str(R.string.hint_aod_mismatch),
                 null
             ));
         }
 
-        String style = presenter.getAodStyle();
-        if ("Always".equals(style)) {
-            items.add(StatusItem.ok("AOD style", style));
+        AodStyle style = presenter.getAodStyle();
+        if (style == AodStyle.ALWAYS) {
+            items.add(StatusItem.ok(str(R.string.label_aod_style), str(style.labelRes)));
         } else if (presenter.canFixAodStyle()) {
             items.add(StatusItem.warn(
-                "AOD style", style,
-                "Set Always On Display to \"Always\", so it stays visible while charging.",
+                str(R.string.label_aod_style), str(style.labelRes),
+                str(R.string.hint_style_fixable),
                 presenter::fixAodStyle
             ));
         } else {
             // No settings screen found to open; point at Samsung settings instead.
             items.add(StatusItem.warn(
-                "AOD style", style,
-                "Set Always On Display to \"Always\" in Samsung settings, so it stays visible while charging.",
+                str(R.string.label_aod_style), str(style.labelRes),
+                str(R.string.hint_style_manual),
                 null
             ));
         }
@@ -83,16 +97,19 @@ public class StatusItems {
         return items;
     }
 
-    private static StatusItem buildBatteryOptimizationItem(MainPresenter presenter) {
+    private StatusItem buildBatteryOptimizationItem() {
         if (presenter.isIgnoringBatteryOptimizations()) {
-            return StatusItem.ok("Battery optimization", "Unrestricted");
+            return StatusItem.ok(str(R.string.label_battery), str(R.string.value_unrestricted));
         }
 
         return StatusItem.warn(
-            "Battery optimization", "Restricted",
-            "The system may kill the background service, so the charger goes unnoticed."
-                + " In the list, choose \"Don't optimize\" for Charging Clock.",
+            str(R.string.label_battery), str(R.string.value_restricted),
+            str(R.string.hint_battery),
             presenter::openBatteryOptimizationSettings
         );
+    }
+
+    private String str(int resId) {
+        return context.getString(resId);
     }
 }

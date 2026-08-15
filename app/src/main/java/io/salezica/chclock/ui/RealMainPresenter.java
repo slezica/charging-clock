@@ -3,6 +3,7 @@ package io.salezica.chclock.ui;
 import android.content.Context;
 
 import io.salezica.chclock.ambient.Ambient;
+import io.salezica.chclock.ambient.AodStyle;
 import io.salezica.chclock.ambient.AmbientProvider;
 import io.salezica.chclock.services.AmbientControlService;
 import io.salezica.chclock.utils.PowerUtils;
@@ -55,7 +56,7 @@ public class RealMainPresenter implements MainPresenter {
     }
 
     @Override
-    public String getAodStyle() {
+    public AodStyle getAodStyle() {
         return ambient.getStyle();
     }
 

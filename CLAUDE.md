@@ -71,6 +71,7 @@ app/src/main/java/io/salezica/chclock/
     StatusItems.java                # builds dashboard rows from a presenter (shared real/mock path)
   ambient/
     Ambient.java                    # backend interface: isSupported/hasPermissions/setAlwaysOn/isAlwaysOn/getStyle
+    AodStyle.java                   # AOD style enum (ALWAYS, TAP_TO_SHOW, ...) with string-resource labels
     AmbientProvider.java            # backend selector; DEBUG flag switches to mock
     AmbientSamsung.java             # real backend: Settings.System "aod_mode" key
     AmbientMock.java                # SharedPreferences-backed fake backend
@@ -91,7 +92,7 @@ docs/                               # guides + dated decision records
 
 - Core flow: `AmbientControlService` (sticky FGS) registers a runtime receiver for `ACTION_POWER_CONNECTED/DISCONNECTED` (manifest receivers can't get these since API 26 — the whole reason the FGS exists). On event: `applyPowerState()` sets AOD = plugged && Prefs.enabled.
 - `AmbientControlService.applyPowerState()` is static and also called synchronously from the UI (via `RealMainPresenter.setEnabled`), so toggles apply before the dashboard re-renders.
-- UI seam: `MainActivity` renders `StatusItems.build(presenter)`. `RealMainPresenter` reads the system; `MockMainPresenter` fakes it for `bin/chclock capture` (debug builds only, selected by `--es preset <name>` intent extra; skips starting the FGS). Preset names in `MockMainPresenter.PRESETS` must stay in sync with `STATES` in `bin/chclock`.
+- UI seam: `MainActivity` renders `new StatusItems(context, presenter).build()`. All natural language lives in `strings.xml`; Java holds only identifiers and enum values. `RealMainPresenter` reads the system; `MockMainPresenter` fakes it for `bin/chclock capture` (debug builds only, selected by `--es preset <name>` intent extra; skips starting the FGS). Preset names in `MockMainPresenter.PRESETS` must stay in sync with `STATES` in `bin/chclock`.
 - `Ambient` interface abstracts the AOD backend; `AmbientProvider.getFor()` is the only construction point. Tile + control service use it directly (no presenter).
 - Debug builds use `applicationIdSuffix ".debug"` — never collides with a store install; adb commands must target `io.salezica.chclock.debug`.
 

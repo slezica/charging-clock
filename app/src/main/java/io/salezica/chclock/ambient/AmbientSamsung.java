@@ -39,12 +39,12 @@ public class AmbientSamsung implements Ambient {
     }
 
     @Override
-    public String getStyle() {
-        if (getSetting(AOD_TAP_TO_SHOW) != 0) return "Tap to show";
-        if (getSetting("aod_display_mode_auto") != 0) return "Auto";
-        if (getSetting("aod_show_for_new_noti") != 0) return "New notifications";
-        if (getSetting("aod_mode_start_time") != getSetting("aod_mode_end_time")) return "Scheduled";
-        return "Always";
+    public AodStyle getStyle() {
+        if (getSetting(AOD_TAP_TO_SHOW) != 0) return AodStyle.TAP_TO_SHOW;
+        if (getSetting("aod_display_mode_auto") != 0) return AodStyle.AUTO;
+        if (getSetting("aod_show_for_new_noti") != 0) return AodStyle.NEW_NOTIFICATIONS;
+        if (getSetting("aod_mode_start_time") != getSetting("aod_mode_end_time")) return AodStyle.SCHEDULED;
+        return AodStyle.ALWAYS;
     }
 
     private int getSetting(String name) {
