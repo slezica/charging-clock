@@ -12,9 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import kotlin.jvm.functions.Function3;
-
 public class SettingsReader {
+
+    public interface OnChangeListener {
+        void onChange(String name, String oldValue, String newValue);
+    }
 
     private final ContentResolver cr;
 
@@ -24,16 +26,16 @@ public class SettingsReader {
         this.cr = cr;
     }
 
-    public void startWatchingChanges(Function3<String, String, String, Void> onChange) {
+    public void startWatchingChanges(OnChangeListener onChange) {
         checkChangesEvery(onChange, 1000);
     }
 
-    private void checkChangesEvery(Function3<String, String, String, Void> onChange, int delay) {
+    private void checkChangesEvery(OnChangeListener onChange, int delay) {
         checkChanges(onChange);
         new Handler().postDelayed(() -> checkChangesEvery(onChange, delay), delay);
     }
 
-    private void checkChanges(Function3<String, String, String, Void> onChange) {
+    private void checkChanges(OnChangeListener onChange) {
         Map<String, String> currentSettings = getSettings();
 
         if (lastSeenSettings != null) {
@@ -42,7 +44,7 @@ public class SettingsReader {
                 String previousValue = lastSeenSettings.get(name);
 
                 if (!currentValue.equals(previousValue)) {
-                    onChange.invoke(name, previousValue, currentValue);
+                    onChange.onChange(name, previousValue, currentValue);
                 }
             }
         }

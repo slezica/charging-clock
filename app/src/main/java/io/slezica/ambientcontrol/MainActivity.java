@@ -52,10 +52,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startWatchingSettingChanges() {
-        new SettingsReader(getContentResolver()).startWatchingChanges((name, oldValue, newValue) -> {
-            Log.d("SettingsReader", "Settings: " + name + " changed from '" + oldValue + "' to '" + newValue + "'");
-            return null;
-        });
+        new SettingsReader(getContentResolver()).startWatchingChanges((name, oldValue, newValue) ->
+            Log.d("SettingsReader", "Settings: " + name + " changed from '" + oldValue + "' to '" + newValue + "'")
+        );
     }
 
     private void startControlService() {
