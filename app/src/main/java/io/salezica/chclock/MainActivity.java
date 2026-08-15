@@ -1,13 +1,11 @@
 package io.salezica.chclock;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,11 +104,12 @@ public class MainActivity extends AppCompatActivity {
             TextView hint = row.findViewById(R.id.status_hint);
 
             label.setText(item.label);
-            value.setText(buildValueText(item));
+            value.setText(item.value);
             value.setTextColor(getColor(getToneColor(item.tone)));
 
-            if (item.hint != null) {
-                hint.setText(item.hint);
+            CharSequence hintText = buildHintText(item);
+            if (hintText != null) {
+                hint.setText(hintText);
             } else {
                 hint.setVisibility(View.GONE);
             }
@@ -126,18 +125,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /** Bold value; actionable rows get a smaller, non-bold "· Tap to fix" suffix. */
-    private CharSequence buildValueText(StatusItem item) {
-        SpannableStringBuilder text = new SpannableStringBuilder(item.value);
-        text.setSpan(new StyleSpan(Typeface.BOLD), 0, text.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    /** Hint text; actionable rows get a tone-colored "Tap to fix" suffix. */
+    private CharSequence buildHintText(StatusItem item) {
+        if (item.hint == null && item.fix == null) {
+            return null;
+        }
+
+        SpannableStringBuilder text = new SpannableStringBuilder();
+        if (item.hint != null) {
+            text.append(item.hint).append(" ");
+        }
 
         if (item.fix != null) {
-            String suffix = " · " + getString(R.string.tap_to_fix);
             int start = text.length();
-            text.append(suffix);
-            text.setSpan(new RelativeSizeSpan(0.72f), start, text.length(),
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            text.append(getString(R.string.tap_to_fix));
+            text.setSpan(new ForegroundColorSpan(getColor(getToneColor(item.tone))),
+                    start, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         return text;

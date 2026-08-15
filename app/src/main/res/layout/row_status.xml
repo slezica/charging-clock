@@ -18,16 +18,16 @@
             android:textColor="@color/text_secondary"
             android:textSize="12sp"/>
 
-    <!-- Bold is applied in code via spans: the "Tap to fix" suffix on
-         actionable rows must stay non-bold, and android:textStyle would
-         embolden the whole text. -->
     <TextView
             android:id="@+id/status_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:textStyle="bold"/>
 
+    <!-- Not selectable: a selectable TextView grabs touches and would block
+         the whole-card tap-to-fix action. -->
     <TextView
             android:id="@+id/status_hint"
             android:layout_width="match_parent"
@@ -35,7 +35,6 @@
             android:layout_marginTop="6dp"
             android:lineSpacingExtra="2dp"
             android:textColor="@color/text_secondary"
-            android:textIsSelectable="true"
             android:textSize="13sp"/>
 
 </LinearLayout>
