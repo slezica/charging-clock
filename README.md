@@ -7,12 +7,6 @@ An Android application that automatically activates the Always-On Display while 
 > [!NOTE]
 > **AI Notice**: this project was updated for newer phones by Claude, in 2026
 
-> [!NOTE]
-> This is the `play-store-version` branch: Samsung One UI only, no ADB-granted
-> permissions, publishable to the Play Store. For the multi-device version that
-> also supports stock Android (via `WRITE_SECURE_SETTINGS` over ADB), see the
-> `master` branch.
-
 ## Supported devices
 
 Samsung devices running One UI with Always-On Display. On other devices the app
