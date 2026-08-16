@@ -46,10 +46,9 @@ a:hover {
   max-width: 26rem;
 }
 
-.hero-text .icon {
-  width: 72px;
-  height: 72px;
-  border-radius: 18px;
+.hero-text .logo {
+  height: 64px;
+  width: auto;
   margin-bottom: 1.25rem;
   display: block;
 }
