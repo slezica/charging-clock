@@ -204,13 +204,17 @@ def cmd_capture(args):
 
     def wait_for_activity(timeout_seconds=15):
         """Poll until MainActivity is the top resumed activity (cold starts can
-        exceed any fixed sleep), then leave a beat for the final render."""
+        exceed any fixed sleep) and its splash screen is dismissed (the activity
+        resumes while the splash overlay still covers the content), then leave
+        a beat for the final render."""
         for _ in range(timeout_seconds * 2):
             out = shell("dumpsys", "activity", "activities").stdout
             resumed = [line for line in out.splitlines() if "topResumedActivity" in line]
             if any(DEBUG_APP_ID in line for line in resumed):
-                shell("sleep", "0.5")
-                return
+                windows = shell("dumpsys", "window", "windows").stdout
+                if f"Splash Screen {DEBUG_APP_ID}" not in windows:
+                    shell("sleep", "0.5")
+                    return
             shell("sleep", "0.5")
         die("MainActivity did not reach the foreground (crash? check logcat)")
 
@@ -406,6 +410,35 @@ def cmd_prepare(args):
     print("Upload the .aab in the Play Console, screenshots from dist/screenshots.")
 
 
+# ------------------------------------------------------------- cmd: video
+
+def cmd_video(args):
+    """Render web/demo.mp4 for the Play FGS declaration: dashboard 'perfect'
+    state, fade to black (screen off), AOD lock screen."""
+    if not shutil.which("ffmpeg"):
+        die("ffmpeg not found (apt install ffmpeg)")
+
+    perfect = DIST / "screenshots" / "perfect.png"
+    lockscreen = DIST / "screenshots" / "lockscreen.png"
+    for image in (perfect, lockscreen):
+        if not image.exists():
+            die(f"{image.relative_to(ROOT)} missing; run `bin/chclock capture` first")
+
+    out = ROOT / "web" / "demo.mp4"
+    result = run([
+        "ffmpeg", "-y",
+        "-loop", "1", "-t", "4", "-framerate", "30", "-i", str(perfect),
+        "-loop", "1", "-t", "4", "-framerate", "30", "-i", str(lockscreen),
+        "-filter_complex",
+        "[0][1]xfade=transition=fadeblack:duration=1:offset=3,"
+        "scale=540:1200,format=yuv420p",
+        "-c:v", "libx264", "-crf", "23", "-movflags", "+faststart", str(out),
+    ], capture=True)
+    if result.returncode != 0:
+        die(f"ffmpeg failed:\n{result.stderr.strip().splitlines()[-5:]}")
+    print(f"Rendered: {out.relative_to(ROOT)}")
+
+
 # ------------------------------------------------------------- cmd: serve
 
 def cmd_serve(args):
@@ -446,6 +479,8 @@ def main():
     p_prepare.add_argument("--changes", required=True, help="markdown changelog entry (multiline OK)")
     p_prepare.add_argument("--screenshots", action="store_true", help="also capture screenshots")
 
+    sub.add_parser("video", help="Render web/demo.mp4 (FGS declaration demo) from captured screenshots")
+
     p_serve = sub.add_parser("serve", help="Serve web/ locally")
     p_serve.add_argument("--port", type=int, default=8080)
 
@@ -458,7 +493,7 @@ def main():
         return
 
     {"build": cmd_build, "capture": cmd_capture, "probe": cmd_probe,
-     "prepare": cmd_prepare, "serve": cmd_serve}[args.command](args)
+     "prepare": cmd_prepare, "serve": cmd_serve, "video": cmd_video}[args.command](args)
 
 
 if __name__ == "__main__":
