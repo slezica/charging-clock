@@ -406,6 +406,24 @@ def cmd_prepare(args):
     print("Upload the .aab in the Play Console, screenshots from dist/screenshots.")
 
 
+# ------------------------------------------------------------- cmd: serve
+
+def cmd_serve(args):
+    import http.server
+
+    web = ROOT / "web"
+    if not web.is_dir():
+        die(f"web directory not found at {web.relative_to(ROOT)}")
+
+    handler = lambda *a, **kw: http.server.SimpleHTTPRequestHandler(*a, directory=str(web), **kw)
+    with http.server.ThreadingHTTPServer(("", args.port), handler) as server:
+        print(f"Serving {web.relative_to(ROOT)}/ at http://localhost:{args.port} (Ctrl-C to stop)")
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt:
+            print("\nStopped.")
+
+
 # ------------------------------------------------------------------ main
 
 def main():
@@ -428,6 +446,9 @@ def main():
     p_prepare.add_argument("--changes", required=True, help="markdown changelog entry (multiline OK)")
     p_prepare.add_argument("--screenshots", action="store_true", help="also capture screenshots")
 
+    p_serve = sub.add_parser("serve", help="Serve web/ locally")
+    p_serve.add_argument("--port", type=int, default=8080)
+
     sub.add_parser("help", help="Show this help")
 
     args = parser.parse_args()
@@ -436,7 +457,8 @@ def main():
         parser.print_help()
         return
 
-    {"build": cmd_build, "capture": cmd_capture, "probe": cmd_probe, "prepare": cmd_prepare}[args.command](args)
+    {"build": cmd_build, "capture": cmd_capture, "probe": cmd_probe,
+     "prepare": cmd_prepare, "serve": cmd_serve}[args.command](args)
 
 
 if __name__ == "__main__":

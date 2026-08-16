@@ -32,6 +32,8 @@ bin/chclock probe
 bin/chclock prepare --version X.Y.Z --changes "<markdown>" [--screenshots]
     # HOST ONLY. Prompts keystore password, bumps versions, updates VERSIONS.md,
     # renders dist/icon-512.png, builds signed release, commits + tags vX.Y.Z
+bin/chclock serve [--port 8080]
+    # serve web/ locally (landing + privacy pages)
 bin/chclock help
 ```
 
