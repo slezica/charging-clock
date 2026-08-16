@@ -7,11 +7,11 @@ def keystorePassword = System.getenv('KEYSTORE_PASSWORD')
 
 android {
     namespace "io.salezica.chclock"
-    compileSdkVersion 35
+    compileSdkVersion 36
     defaultConfig {
         applicationId "io.salezica.chclock"
         minSdkVersion 24
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode 10100
         versionName "1.1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
