@@ -60,7 +60,7 @@ Raw gradle still works (`./gradlew assembleDebug|test|connectedAndroidTest`); te
 
 - Pure Java, no Kotlin.
 - Plain Android SDK, minimal AndroidX (appcompat, constraintlayout). No DI, no architecture framework.
-- compileSdk/targetSdk 35, minSdk 24.
+- compileSdk/targetSdk 36, minSdk 24.
 
 ## File tree
 
