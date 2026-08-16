@@ -111,6 +111,14 @@ a:hover {
 
 /* ---- Privacy page ---- */
 
+.email span:nth-child(odd) {
+  display: none;
+}
+
+.email {
+  color: var(--accent);
+}
+
 .doc {
   max-width: 42rem;
   margin: 0 auto;
