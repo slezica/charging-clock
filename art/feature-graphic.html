@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Feature graphic (1024x500)</title>
+  <!-- Play Store feature graphic. Render:
+       chromium --headless --no-sandbox --window-size=1024,500
+                --screenshot=dist/feature-graphic.png art/feature-graphic.html -->
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1024px;
+      height: 500px;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 20% 50%, #151a24 0%, #0b0d12 65%);
+      color: #e8ebf0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+    }
+
+    .shot {
+      flex: none;
+      width: 300px;
+      margin: 60px 0 0 90px;
+      align-self: flex-start;
+    }
+
+    .shot img {
+      width: 100%;
+      display: block;
+      border-radius: 28px;
+      border: 1px solid #232a38;
+    }
+
+    .text {
+      flex: 1;
+      padding: 0 90px 0 80px;
+    }
+
+    .text .logo {
+      height: 72px;
+      display: block;
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .tagline {
+      font-size: 26px;
+      color: #7fd4a3;
+    }
+  </style>
+</head>
+<body>
+  <div class="shot"><img src="../web/lockscreen.png" alt=""></div>
+  <div class="text">
+    <img class="logo" src="../web/logo.png" alt="">
+    <h1>Charging Clock</h1>
+    <p class="tagline">Always On Display follows your charger</p>
+  </div>
+</body>
+</html>
