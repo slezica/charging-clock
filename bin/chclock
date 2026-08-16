@@ -19,6 +19,7 @@ VERSIONS_FILE = ROOT / "docs" / "VERSIONS.md"
 KEYSTORE = ROOT / "secrets" / "release.keystore"
 KEY_ALIAS = "chclock"
 ICON_SVG = ROOT / "art" / "icon.svg"
+AOD_SVG = ROOT / "art" / "aod-lockscreen.svg"
 
 APP_ID = "io.salezica.chclock"
 DEBUG_APP_ID = APP_ID + ".debug"
@@ -235,6 +236,8 @@ def cmd_capture(args):
             die(f"screencap failed for state '{state}'")
         print(f"  {png.relative_to(ROOT)}")
 
+    render_lockscreen()
+
     print("Capture OK.")
 
 
@@ -341,16 +344,27 @@ def prepend_changelog(version, changes):
     print(f"Changelog updated: {VERSIONS_FILE.relative_to(ROOT)}")
 
 
-def render_icon():
-    DIST.mkdir(exist_ok=True)
-    png = DIST / "icon-512.png"
+def render_svg(svg, png, width, height):
+    if not shutil.which("rsvg-convert"):
+        die("rsvg-convert not found (brew install librsvg / apt install librsvg2-bin)")
+    png.parent.mkdir(parents=True, exist_ok=True)
     result = run(
-        ["rsvg-convert", "-w", "512", "-h", "512", str(ICON_SVG), "-o", str(png)],
+        ["rsvg-convert", "-w", str(width), "-h", str(height), str(svg), "-o", str(png)],
         capture=True,
     )
     if result.returncode != 0:
-        die(f"icon render failed:\n{result.stderr.strip()}")
-    print(f"Icon rendered: {png.relative_to(ROOT)}")
+        die(f"render failed for {svg.name}:\n{result.stderr.strip()}")
+    print(f"Rendered: {png.relative_to(ROOT)}")
+
+
+def render_icon():
+    render_svg(ICON_SVG, DIST / "icon-512.png", 512, 512)
+
+
+def render_lockscreen():
+    # Static fake of the AOD lock screen for the store listing; a real
+    # screenshot can't be taken while the device is locked.
+    render_svg(AOD_SVG, DIST / "screenshots" / "lockscreen.png", 1080, 2400)
 
 
 def cmd_prepare(args):

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fake Samsung AOD lock screen for the Play Store listing.
+     Rendered to dist/screenshots/lockscreen.png by bin/chclock capture/prepare.
+     Notification icons are deliberately generic (no real app logos). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="2400" viewBox="0 0 1080 2400">
+
+  <rect width="1080" height="2400" fill="#000000"/>
+
+  <!-- Top-right battery indicator -->
+  <g stroke="#aeb4c0" stroke-width="6" fill="none">
+    <rect x="952" y="96" width="76" height="38" rx="12"/>
+    <path d="M 1034 108 v 14" stroke-linecap="round" stroke-width="8"/>
+  </g>
+  <rect x="962" y="106" width="40" height="18" rx="5" fill="#aeb4c0"/>
+
+  <!-- Clock -->
+  <text x="540" y="620" text-anchor="middle" fill="#c9cfdd"
+        font-family="Roboto, sans-serif" font-size="264" font-weight="300"
+        letter-spacing="4">22:32</text>
+
+  <!-- Date -->
+  <text x="540" y="742" text-anchor="middle" fill="#c9cfdd"
+        font-family="Roboto, sans-serif" font-size="60" font-weight="400">Sat, August 15</text>
+
+  <!-- Generic notification icons -->
+  <g stroke="#8d93a0" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"
+     transform="translate(133,224) scale(0.72)">
+    <!-- chat bubble -->
+    <path d="M 375 900 h 90 a 14 14 0 0 1 14 14 v 56 a 14 14 0 0 1 -14 14 h -56 l -34 26 v -96 a 14 14 0 0 1 14 -14 z" transform="translate(0,-30)"/>
+    <!-- envelope -->
+    <g transform="translate(510,870)">
+      <rect x="0" y="0" width="110" height="80" rx="14"/>
+      <path d="M 6 10 l 49 38 l 49 -38"/>
+    </g>
+    <!-- calendar -->
+    <g transform="translate(660,870)">
+      <rect x="0" y="6" width="96" height="76" rx="14"/>
+      <path d="M 0 32 h 96 M 26 0 v 14 M 70 0 v 14"/>
+    </g>
+  </g>
+
+  <!-- Bottom charging status -->
+  <g fill="#aeb4c0" font-family="Roboto, sans-serif">
+    <path d="M 448 2124 l -26 44 h 20 l -12 36 l 34 -48 h -20 l 16 -32 z"/>
+    <text x="560" y="2192" text-anchor="middle" font-size="52" font-weight="400">75%</text>
+    <text x="540" y="2266" text-anchor="middle" font-size="46" font-weight="300"
+          fill="#8d93a0">4 m until 80%</text>
+  </g>
+
+</svg>

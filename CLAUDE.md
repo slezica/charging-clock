@@ -50,7 +50,7 @@ Raw gradle still works (`./gradlew assembleDebug|test|connectedAndroidTest`); te
 - versionCode scheme: `X*10000 + Y*100 + Z` (minor/patch ≤ 99).
 - Keep the FGS `specialUse` justification stable between releases (re-reviewed each time).
 - Play listing icon: `dist/icon-512.png`, rendered from `art/icon.svg` by prepare.
-- Lock-screen store screenshot: static fake, TODO — waiting on a Samsung reference photo from the user.
+- Lock-screen store screenshot: static fake, `art/aod-lockscreen.svg` rendered to `dist/screenshots/lockscreen.png` by capture (and prepare via `--screenshots`). Generic notification icons on purpose — no real app logos in the listing.
 
 ## Tech stack
 
