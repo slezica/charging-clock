@@ -44,7 +44,7 @@
     <path d="M 448 2124 l -26 44 h 20 l -12 36 l 34 -48 h -20 l 16 -32 z"/>
     <text x="560" y="2192" text-anchor="middle" font-size="52" font-weight="400">75%</text>
     <text x="540" y="2266" text-anchor="middle" font-size="46" font-weight="300"
-          fill="#8d93a0">4 m until 80%</text>
+          fill="#8d93a0">14 m until 100%</text>
   </g>
 
 </svg>
